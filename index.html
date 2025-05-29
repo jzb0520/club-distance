@@ -100,6 +100,48 @@
     .line span:last-child {
       text-align: right;
     }
+ /* ここからレスポンシブ対応を追加 */
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  input[type="file"], input[type="number"] {
+    font-size: 14px;
+    padding: 6px;
+    width: 80px;
+  }
+
+  #clubs {
+    gap: 2px;
+  }
+
+  .preview-wrapper {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 5; /* 高さ自動調整 */
+  }
+
+  #headerText {
+    font-size: 24px;
+    padding: 6px 0;
+  }
+
+  #overlayText {
+    font-size: 14px;
+    left: 20px;
+    bottom: 20px;
+    max-width: 200px;
+  }
+
+  .line span:first-child {
+    width: 50px;
+  }
+}
   </style>
 </head>
 <body>
