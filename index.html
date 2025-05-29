@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Club Distance</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: #111;
+      color: #fff;
+      font-family: 'Helvetica Neue', sans-serif;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 16px;
+    }
+    input[type="file"], input[type="number"] {
+      padding: 8px;
+      margin: 4px;
+      font-size: 16px;
+    }
+    #clubs {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    #clubs input {
+      margin: 4px;
+      width: 100px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #333;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .preview-wrapper {
+      position: relative;
+      width: 400px;
+      height: 700px;
+      margin: 30px auto;
+      overflow: hidden;
+    }
+    #bgImage {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    #headerText {
+      position: absolute;
+      top: 20px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 36px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 2px 2px 4px #000;
+      letter-spacing: 2px;
+      font-family: 'Playfair Display', serif;
+      border-top: 2px solid white;
+      border-bottom: 2px solid white;
+      padding: 8px 0;
+    }
+    #overlayText {
+      position: absolute;
+      bottom: 40px;
+      left: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      color: white;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px #000;
+      font-size: 20px;
+      line-height: 1.8;
+      max-width: 240px;
+    }
+    .line {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      border-bottom: 1px dotted #aaa;
+      margin: 2px 0;
+    }
+    .line span:first-child {
+      width: 60px;
+      text-align: left;
+    }
+    .line span:last-child {
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <h1>Club Distance</h1>
+  <input type="file" id="imageUpload" accept="image/*"><br>
+  <div id="clubs"></div>
+  <button onclick="renderImage()">画像を生成</button>
+
+  <div class="preview-wrapper">
+    <img id="bgImage" src="" style="display:none;">
+    <div id="headerText">Club Distance</div>
+    <div id="overlayText"></div>
+  </div>
+
+  <script>
+    const CLUBS = [
+      '1W', '3W', '5W', '7W', 'U4', 'U5', 'U7',
+      '3I', '4I', '5I', '6I', '7I', '8I', '9I',
+      'P', '48°', '50°', '52°', '54°', '56°', '58°', '60°'
+    ];
+
+    const clubsContainer = document.getElementById('clubs');
+    CLUBS.forEach(club => {
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.placeholder = `${club} yd`;
+      input.id = `club-${club}`;
+      clubsContainer.appendChild(input);
+    });
+
+    document.getElementById('imageUpload').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          document.getElementById('bgImage').src = event.target.result;
+          document.getElementById('bgImage').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function renderImage() {
+      const overlay = document.getElementById('overlayText');
+      let html = '';
+
+      CLUBS.forEach(club => {
+        const val = document.getElementById(`club-${club}`).value;
+        if (val) {
+          html += `<div class="line"><span>${club}</span><span>${val} Yards</span></div>`;
+        }
+      });
+
+      overlay.innerHTML = html;
+
+      html2canvas(document.querySelector(".preview-wrapper")).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'yardage.png';
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    }
+  </script>
+</body>
+</html>
